@@ -18,12 +18,14 @@ var watcher = chokidar.watch('/Users/kevinvandenborne/Desktop', {
 });
 
 watcher.on('add', function (file, event) {
-  console.log('file add')
+
   $fileCreatedDate = new Date(event.ctime);
   $currentDate = new Date();
   $pastDate = new Date($currentDate.getTime() - 60000);
 
   if ($fileCreatedDate >= $pastDate && $fileCreatedDate <= $currentDate) {
+
+    console.log('New file added to folder /Users/kevinvandenborne/Desktop');
 
     var fs = require('fs');
 
@@ -39,11 +41,13 @@ watcher.on('add', function (file, event) {
       ACL: "public-read",
       ContentType: mime.lookup(file)
     }, function (err, data) {
-      console.log(err);
-      console.log(data);
-      console.log("Successfully uploaded data to myBucket/myKey");
+
+      console.log('File uploaded to sourcebox-screenshots/' + path.parse(file).base);
+
       ncp.copy(data.Location, function () {
-        console.log("url pasted to clipboard");
+
+        console.log("S3 URL pasted to clipboard " + data.Location);
+
       })
     });
   }
