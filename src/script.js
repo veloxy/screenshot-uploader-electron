@@ -5,13 +5,15 @@ const electron = require('electron'),
   browserWindow = electron.BrowserWindow,
   ncp = require("copy-paste");
 
-//app.dock.hide();
+app.dock.hide();
 
 var watcherHandler = require('./libs/watcherHandler.js'),
-  uploaderHandler = require('./libs/uploaderHandler.js');
+  uploaderHandler = require('./libs/uploaderHandler.js'),
+  urlShortenerHandler = require('./libs/urlShortenerHandler.js');
 
 // Load handlers
 uploaderHandler.loadUploader();
+urlShortenerHandler.loadUrlShortener();
 watcherHandler.loadWatchers();
 
 /**
@@ -19,9 +21,12 @@ watcherHandler.loadWatchers();
  * @todo Multiple configurable callbacks
  */
 uploaderHandler.on('fileUploaded', function (location) {
-  ncp.copy(location, function () {
-    console.log("S3 URL pasted to clipboard " + location);
-  })
+  console.log('Original file location ' + location);
+  urlShortenerHandler.shorten(location, function (url) {
+    ncp.copy(url, function() {
+      console.log("URL pasted to clipboard " + url);
+    });
+  });
 });
 
 /**

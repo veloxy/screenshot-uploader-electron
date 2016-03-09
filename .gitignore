@@ -113,3 +113,4 @@ fabric.properties
 .node_repl_history
 
 src/config/config.json
+src/plugins/url-shorteners/goo.gl.json
