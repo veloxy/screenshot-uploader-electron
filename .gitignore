@@ -112,5 +112,6 @@ fabric.properties
 # Optional REPL history
 .node_repl_history
 
+build/
 src/config/config.json
 src/plugins/url-shorteners/goo.gl.json
