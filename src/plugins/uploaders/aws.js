@@ -29,7 +29,7 @@ function awsUploader() {
    * @todo Load this from preferences of some kind
    */
   object.loadAWSConfig = function () {
-    AWS.config.loadFromPath('src/config/config.json');
+    AWS.config.loadFromPath(appRoot + '/config/config.json');
   }
 
   /**

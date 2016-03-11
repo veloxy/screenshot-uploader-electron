@@ -3,13 +3,16 @@ const electron = require('electron'),
   app = electron.app,
   tray = electron.Tray,
   browserWindow = electron.BrowserWindow,
-  ncp = require("copy-paste");
+  ncp = require("copy-paste")
+  path = require('path');
 
 app.dock.hide();
 
 var watcherHandler = require('./libs/watcherHandler.js'),
   uploaderHandler = require('./libs/uploaderHandler.js'),
   urlShortenerHandler = require('./libs/urlShortenerHandler.js');
+
+global.appRoot = path.resolve(__dirname);
 
 // Load handlers
 uploaderHandler.loadUploader();

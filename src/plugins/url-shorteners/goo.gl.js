@@ -1,6 +1,6 @@
 const GoogleURL = require('google-url')
   fs = require('fs'),
-  configurationFile = 'src/plugins/url-shorteners/goo.gl.json';
+  configurationFile = appRoot + '/plugins/url-shorteners/goo.gl.json';
 
 /**
  * gooGl class

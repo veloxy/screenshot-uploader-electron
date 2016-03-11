@@ -1,10 +1,11 @@
 {
-  "name": "Screenshot Uploader Electron",
+  "name": "ScreenshotUploaderElectron",
   "version": "1.0.0",
-  "description": "",
+  "description": "Screenshot uploader created in electron.",
   "main": "src/script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf build/ && electron-packager ./ ScreenshotUploader --platform=darwin --arch=all --version=0.36.7 --out=./build --ignore=build/ --overwrite --prune"
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +15,9 @@
     "copy-paste": "^1.1.4",
     "google-url": "0.0.4",
     "methodical": "0.0.3",
-    "mime": "^1.3.4",
-    "s3": "^4.4.0"
+    "mime": "^1.3.4"
+  },
+  "devDependencies": {
+    "electron-packager": "^5.2.1"
   }
 }
