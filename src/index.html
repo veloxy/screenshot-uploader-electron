@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Photon</title>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/photon.min.css">
+</head>
+<body>
+<script>
+  var fs = require('fs');
+  var uploaders = fs.readdirSync(__dirname + '/plugins/uploaders');
+  var urlShorteners = fs.readdirSync(__dirname + '/plugins/url-shorteners');
+  var watchers = fs.readdirSync(__dirname + '/plugins/watchers');
+
+  for (key in uploaders) {
+    var uploader = require(__dirname + '/plugins/uploaders/' + uploaders[key]);
+    console.log(uploader.getName());
+  }
+</script>
+<div class="window">
+  <!-- Your app's content goes inside .window-content -->
+  <div class="window-content">
+    <div class="pane-group">
+      <div class="pane pane-sm sidebar">
+        <nav class="nav-group">
+          <h5 class="nav-group-title">General</h5>
+          <h5 class="nav-group-title">Uploaders</h5>
+          <span class="nav-group-item">
+            <span class="icon icon-upload"></span>
+            Amazon S3
+          </span>
+          <h5 class="nav-group-title">URL Shorteners</h5>
+          <span class="nav-group-item">
+            <span class="icon icon-gplus"></span>
+            Goo.gl
+          </span>
+          <h5 class="nav-group-title">Watchers</h5>
+          <span class="nav-group-item">
+            <span class="icon icon-folder"></span>
+            File
+          </span>
+        </nav>
+      </div>
+
+      <div class="pane" style="padding: 20px">
+        <form>
+          <div class="form-group">
+            <label>Email address</label>
+            <input type="email" class="form-control" placeholder="Email">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" rows="3"></textarea>
+          </div>
+          <select class="form-control">
+            <option>Option one</option>
+            <option>Option two</option>
+            <option>Option three</option>
+            <option>Option four</option>
+            <option>Option five</option>
+            <option>Option six</option>
+            <option>Option seven</option>
+            <option>Option eight</option>
+          </select>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"> This is a checkbox
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"> This is a checkbox too
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="radios" checked>
+              Keep your options open
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="radios">
+              Be sure to remember to check for unknown unknowns
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-form btn-default">Cancel</button>
+            <button type="submit" class="btn btn-form btn-primary">OK</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -6,7 +6,7 @@ const electron = require('electron'),
   ncp = require("copy-paste")
   path = require('path');
 
-app.dock.hide();
+//app.dock.hide();
 
 var watcherHandler = require('./libs/watcherHandler.js'),
   uploaderHandler = require('./libs/uploaderHandler.js'),
@@ -42,7 +42,7 @@ watcherHandler.on('newFile', function (file) {
 var menuTray = null;
 
 app.on('ready', function(){
-  window = new browserWindow({ width: 1, height: 1, show: false });
+  window = new browserWindow({ width: 800, height: 500, show: true });
 
   window.loadURL('file://' + __dirname + '/index.html');
   window.webContents.on('did-finish-load', function () {
@@ -53,4 +53,6 @@ app.on('ready', function(){
       });
     });
   });
+
+  window.toggleDevTools();
 });
