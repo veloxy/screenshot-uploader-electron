@@ -55,19 +55,35 @@ function awsUploader() {
   }
 
   /**
-   * Get the plugin name
-   * @returns {string}
-     */
-  object.getName = function () {
-    return 'AWS Uploader';
-  }
-
-  /**
    * Get AWS bucket
    * @returns {string}
      */
   object.getBucket = function () {
     return 'sourcebox-screenshots';
+  }
+
+  /**
+   * Get the plugin name
+   * @returns {string}
+   */
+  object.getName = function () {
+    return 'AWS Uploader';
+  }
+
+  /**
+   * Get the plugin handler
+   * @returns {string}
+   */
+  object.getHandler = function () {
+    return 'aws-uploader';
+  }
+
+  /**
+   * Get uploader icon
+   * @returns {string}
+   */
+  object.getIconName = function() {
+    return 'upload';
   }
 
   return object;

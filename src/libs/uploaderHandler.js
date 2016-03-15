@@ -47,7 +47,7 @@ function uploaderHandler () {
    * Get the uploaders
    * @returns uploaderInterface uploader
    */
-  object.getUploader = function() {
+  object.getUploader = function () {
     return uploader;
   }
 

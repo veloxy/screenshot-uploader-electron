@@ -6,17 +6,6 @@
   <link rel="stylesheet" href="assets/css/photon.min.css">
 </head>
 <body>
-<script>
-  var fs = require('fs');
-  var uploaders = fs.readdirSync(__dirname + '/plugins/uploaders');
-  var urlShorteners = fs.readdirSync(__dirname + '/plugins/url-shorteners');
-  var watchers = fs.readdirSync(__dirname + '/plugins/watchers');
-
-  for (key in uploaders) {
-    var uploader = require(__dirname + '/plugins/uploaders/' + uploaders[key]);
-    console.log(uploader.getName());
-  }
-</script>
 <div class="window">
   <!-- Your app's content goes inside .window-content -->
   <div class="window-content">
@@ -25,10 +14,7 @@
         <nav class="nav-group">
           <h5 class="nav-group-title">General</h5>
           <h5 class="nav-group-title">Uploaders</h5>
-          <span class="nav-group-item">
-            <span class="icon icon-upload"></span>
-            Amazon S3
-          </span>
+          <div id="js-uploaders"></div>
           <h5 class="nav-group-title">URL Shorteners</h5>
           <span class="nav-group-item">
             <span class="icon icon-gplus"></span>
@@ -97,5 +83,28 @@
     </div>
   </div>
 </div>
+
+<script>
+  var path = require('path');
+  global.appRoot = path.resolve(__dirname);
+  var pluginHandler = require(__dirname + '/libs/pluginHandler.js');
+  var uploaders = pluginHandler.getPlugins('uploaders');
+
+  for (var key in uploaders) {
+    var uploader = uploaders[key];
+    var container = document.getElementById('js-uploaders');
+
+    var navGroupItem = document.createElement("SPAN");
+    navGroupItem.className = 'nav-group-item';
+
+    var icon = document.createElement('SPAN');
+    icon.className = 'icon icon-' + uploader.getIconName();
+
+    var uploaderName = document.createTextNode(uploader.getName());
+
+    container.appendChild(navGroupItem.appendChild(icon).appendChild(uploaderName));
+  }
+</script>
+
 </body>
 </html>
