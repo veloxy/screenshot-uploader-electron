@@ -1,22 +1,23 @@
 <div class="pane" style="padding: 20px">
-  <form>
+  <form ng-submit="submit()">
     <div class="form-group">
       <label>Access Key ID</label>
-      <input name="accessKeyId" type="text" class="form-control" placeholder="Access Key ID">
+      <input name="accessKeyId" ng-model="accessKeyId" type="text" class="form-control" placeholder="Access Key ID">
     </div>
     <div class="form-group">
       <label>Secret Key</label>
-      <input name="secretAccessKey" type="text" class="form-control" placeholder="Secret Access Key">
+      <input name="secretAccessKey" ng-model="secretAccessKey" type="text" class="form-control" placeholder="Secret Access Key">
     </div>
     <div class="form-group">
       <label>Bucket</label>
-      <input name="bucket" type="text" class="form-control" placeholder="You bucket name">
+      <input name="bucket" ng-model="bucket" type="text" class="form-control" placeholder="You bucket name">
     </div>
     <div class="form-group">
       <label>Region</label>
-      <select class="form-control">
+      <select class="form-control" ng-model="region">
         <option value="eu-central-1">EU Central 1</option>
       </select>
     </div>
+    <button type="submit" class="btn btn-large btn-primary">Save</button>
   </form>
 </div>
