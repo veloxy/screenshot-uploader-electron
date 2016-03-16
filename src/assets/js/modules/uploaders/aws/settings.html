@@ -1,0 +1,42 @@
+<div class="pane" style="padding: 20px">
+  <h3>Amazon S3 settings</h3>
+  <p>
+    To use Amazon S3, you should create an IAM user,
+    provide it with permissions to use your bucket and generate Access keys.
+    Then, provide the details below.
+  </p>
+  <hr>
+  <form ng-submit="submit()">
+    <div class="form-group">
+      <label>Access Key ID</label>
+      <input name="accessKeyId" ng-model="accessKeyId" type="text" class="form-control" placeholder="Access Key ID">
+    </div>
+    <div class="form-group">
+      <label>Secret Key</label>
+      <input name="secretAccessKey" ng-model="secretAccessKey" type="text" class="form-control" placeholder="Secret Access Key">
+    </div>
+    <div class="form-group">
+      <label>Bucket</label>
+      <input name="bucket" ng-model="bucket" type="text" class="form-control" placeholder="You bucket name">
+    </div>
+    <div class="form-group">
+      <label>Region</label>
+      <select class="form-control" ng-model="region">
+        <option value="us-east-1">US East (N. Virginia)</option>
+        <option value="us-west-1">US West (N. California)</option>
+        <option value="us-west-2">US West (Oregon)</option>
+        <option value="eu-west-1">EU (Ireland)</option>
+        <option value="eu-central-1">EU (Frankfurt)</option>
+        <option value="ap-northeast-1">Asia Pacific (Tokyo)</option>
+        <option value="ap-northeast-2">Asia Pacific (Seoul)</option>
+        <option value="ap-southeast-1">Asia Pacific (Singapore)</option>
+        <option value="ap-southeast-2">Asia Pacific (Sydney)</option>
+        <option value="sa-east-1">South America (Sao Paulo)</option>
+      </select>
+      <small>This is the region your bucket is in, you can find this in your bucket properties</small>
+    </div>
+    <button type="submit" class="btn btn-large btn-primary">Save</button>
+  </form>
+  <hr>
+  <small>{{configPath}}</small>
+</div>

@@ -1,5 +1,6 @@
 var events = require('events'),
-  fs = require('fs');
+  fs = require('fs'),
+  path = require('path');
 
 /**
  * pluginHandler class
@@ -18,11 +19,11 @@ function pluginHandler () {
    * @returns {Array}
      */
   object.getPlugins = function (type) {
-    var plugins = fs.readdirSync(appRoot + '/plugins/' + type );
+    var plugins = fs.readdirSync(appRoot + '/assets/js/modules/' + type );
     var pluginObjects = [];
 
-    for (key in plugins) {
-      var plugin = require(appRoot + '/plugins/' + type + '/' + plugins[key]);
+    for (var key in plugins) {
+      var plugin = require(appRoot + '/assets/js/modules/' + type + '/' + plugins[key] + '/plugin.js');
       pluginObjects.push(plugin);
     }
 

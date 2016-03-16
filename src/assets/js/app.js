@@ -1,48 +1,44 @@
+var path = require('path');
+
 global.angular = require('angular');
 global.router = require('angular-ui-router');
+global.appRoot = path.resolve(__dirname);
 
-require(__dirname + '/assets/js/modules/aws/module.js');
+require(__dirname + '/assets/js/modules/uploaders/aws/module.js');
+require(__dirname + '/assets/js/modules/url-shorteners/goo.gl/module.js');
 
-var app = angular.module('app', [router, 'app.aws']);
+var app = angular.module('app', [router, 'app.aws', 'app.googl']);
 
 app.factory("pluginService", function() {
+  var pluginHandler = require(__dirname + '/libs/pluginHandler.js');
+
   return {
+    getPlugins: function(type) {
+      var plugins = pluginHandler.getPlugins(type);
+      var items = [];
+
+      for (var key in plugins) {
+        items.push({
+          name: plugins[key].getName(),
+          icon: plugins[key].getIconName(),
+          handler: plugins[key].getHandler()
+        })
+      }
+
+      return items;
+    },
     getUploaders: function() {
-      return [{
-        name: 'Amazon S3',
-        icon: 'upload',
-        handler: 'aws',
-      }, {
-        name: 'Dropbox',
-        icon: 'dropbox',
-        handler: 'dropbox'
-      }, {
-        name: 'Instagram',
-        icon: 'instagram',
-        handler: 'instagram'
-      }];
+      return this.getPlugins('uploaders');
     },
     getUrlShorteners: function() {
-      return [{
-        name: 'Goo.gl',
-        icon: 'gplus',
-        handler: 'google',
-      }];
+      return this.getPlugins('url-shorteners');
     },
     getWatchers: function() {
       return [{
         name: 'File',
         icon: 'folder',
         handler: 'file',
-      }, {
-        name: 'Dribbble',
-        icon: 'dribbble-circled',
-        handler: 'dibbble'
-      }, {
-        name: 'Dropbox',
-        icon: 'dropbox',
-        handler: 'dropbox'
-      }];
+      }]
     },
   };
 });

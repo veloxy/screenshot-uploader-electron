@@ -11,8 +11,10 @@ const electron = require('electron'),
 var watcherHandler = require('./libs/watcherHandler.js'),
   uploaderHandler = require('./libs/uploaderHandler.js'),
   urlShortenerHandler = require('./libs/urlShortenerHandler.js');
+  pluginHandler = require('./libs/pluginHandler.js');
 
 global.appRoot = path.resolve(__dirname);
+//pluginHandler.getPlugins('uploaders');
 
 // Load handlers
 uploaderHandler.loadUploader();
