@@ -1,3 +1,4 @@
+const chokidar = require('chokidar');
 /**
  * gooGl class
  * @returns {awsUploader}
@@ -52,12 +53,10 @@ function fileWatcher() {
 
   /**
    * Get user home folder
-   * @todo Read the directory from a config or some kind of preferences
-   * @returns {*}
+   * @returns {string}
    */
   object.getDirectory = function() {
     var config = object.getConfig();
-    //var homeFolder = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
     return config.folder;
   }
 
@@ -82,7 +81,7 @@ function fileWatcher() {
    * @returns {string}
    */
   object.getHandler = function () {
-    return 'watcher.file';
+    return 'file';
   }
 
   /**

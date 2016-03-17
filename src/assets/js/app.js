@@ -6,8 +6,9 @@ global.appRoot = path.resolve(__dirname);
 
 require(__dirname + '/assets/js/modules/uploaders/aws/module.js');
 require(__dirname + '/assets/js/modules/url-shorteners/goo.gl/module.js');
+require(__dirname + '/assets/js/modules/watchers/file/module.js');
 
-var app = angular.module('app', [router, 'app.aws', 'app.googl']);
+var app = angular.module('app', [router, 'app.aws', 'app.googl', 'app.file']);
 
 app.factory("pluginService", function() {
   var pluginHandler = require(__dirname + '/libs/pluginHandler.js');

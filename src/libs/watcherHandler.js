@@ -1,6 +1,6 @@
 var watcherInterface = require('./watcherInterface.js'),
   events = require('events'),
-  fileWatcher = require('../plugins/watchers/file.js');
+  fileWatcher = require(appRoot + '/assets/js/modules/watchers/file/plugin.js');
 
 /**
  * watcherHandler class

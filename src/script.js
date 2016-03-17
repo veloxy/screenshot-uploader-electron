@@ -7,13 +7,13 @@ const electron = require('electron'),
   path = require('path');
 
 //app.dock.hide();
+global.appRoot = path.resolve(__dirname);
 
 var watcherHandler = require('./libs/watcherHandler.js'),
   uploaderHandler = require('./libs/uploaderHandler.js'),
   urlShortenerHandler = require('./libs/urlShortenerHandler.js');
   pluginHandler = require('./libs/pluginHandler.js');
 
-global.appRoot = path.resolve(__dirname);
 //pluginHandler.getPlugins('uploaders');
 
 // Load handlers
@@ -38,6 +38,7 @@ uploaderHandler.on('fileUploaded', function (location) {
  * Run on new file
  */
 watcherHandler.on('newFile', function (file) {
+  console.log('New file ' + file);
   uploaderHandler.upload(file);
 })
 
