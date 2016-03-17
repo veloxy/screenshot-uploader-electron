@@ -1,29 +1,25 @@
 const chokidar = require('chokidar');
-
 /**
- * fileWatcher class
- * @returns fileWatcher
+ * gooGl class
+ * @returns {awsUploader}
  */
 function fileWatcher() {
 
   /**
-   * fileWatcher object
-   * @type {fileWatcher}
-     */
-  var object = {};
+   * Base plugin
+   */
+  var basePlugin = new (require(appRoot + '/assets/js/basePlugin.js'))();
+
+  /**
+   * gooGl object
+   * @type {gooGl}
+   */
+  var object = basePlugin;
 
   /**
    * @type watcherInterface
    */
   var watcher = {};
-
-  /**
-   * Returns the fileWatcher plugin name
-   * @returns {string}
-   */
-  object.getName = function () {
-    return 'File Watcher';
-  }
 
   /**
    * Loads the fileWatcher
@@ -57,12 +53,45 @@ function fileWatcher() {
 
   /**
    * Get user home folder
-   * @todo Read the directory from a config or some kind of preferences
-   * @returns {*}
+   * @returns {string}
    */
   object.getDirectory = function() {
-    var homeFolder = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
-    return homeFolder + '/Dropbox/Screenshots';
+    var config = object.getConfig();
+    return config.folder;
+  }
+
+  /**
+   * Get the plugin name
+   * @returns {string}
+   */
+  object.getName = function () {
+    return 'File';
+  }
+
+  /**
+   * Get the icon name
+   * @returns {string}
+   */
+  object.getIconName = function () {
+    return 'folder';
+  }
+
+  /**
+   * Get the plugin handler
+   * @returns {string}
+   */
+  object.getHandler = function () {
+    return 'file';
+  }
+
+  /**
+   * Get config fields
+   * @returns {string[]}
+   */
+  object.getConfigFields = function () {
+    return [
+      'folder',
+    ];
   }
 
   return object;
@@ -70,6 +99,6 @@ function fileWatcher() {
 
 /**
  * Export module
- * @type {fileWatcher}
+ * @type {gooGl}
  */
 module.exports = new fileWatcher();

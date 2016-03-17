@@ -6,13 +6,15 @@ const electron = require('electron'),
   ncp = require("copy-paste")
   path = require('path');
 
-app.dock.hide();
+//app.dock.hide();
+global.appRoot = path.resolve(__dirname);
 
 var watcherHandler = require('./libs/watcherHandler.js'),
   uploaderHandler = require('./libs/uploaderHandler.js'),
   urlShortenerHandler = require('./libs/urlShortenerHandler.js');
+  pluginHandler = require('./libs/pluginHandler.js');
 
-global.appRoot = path.resolve(__dirname);
+//pluginHandler.getPlugins('uploaders');
 
 // Load handlers
 uploaderHandler.loadUploader();
@@ -36,13 +38,14 @@ uploaderHandler.on('fileUploaded', function (location) {
  * Run on new file
  */
 watcherHandler.on('newFile', function (file) {
+  console.log('New file ' + file);
   uploaderHandler.upload(file);
 })
 
 var menuTray = null;
 
 app.on('ready', function(){
-  window = new browserWindow({ width: 1, height: 1, show: false });
+  window = new browserWindow({ width: 800, height: 500, show: true });
 
   window.loadURL('file://' + __dirname + '/index.html');
   window.webContents.on('did-finish-load', function () {
@@ -53,4 +56,6 @@ app.on('ready', function(){
       });
     });
   });
+
+  window.toggleDevTools();
 });

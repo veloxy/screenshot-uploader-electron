@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Photon</title>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/photon.min.css">
+  <script src="assets/js/app.js"></script>
+</head>
+<body ng-app="app">
+<div class="window">
+  <div class="window-content">
+    <div class="pane-group">
+      <!-- Navigation -->
+      <div class="pane pane-sm sidebar" ng-controller="pluginController">
+        <nav class="nav-group">
+          <h5 class="nav-group-title">General</h5>
+          <h5 class="nav-group-title">Uploaders</h5>
+          <div ng-repeat="plugin in plugins.uploaders">
+            <span ui-sref-active="active" ui-sref="{{plugin.handler}}" class="nav-group-item">
+              <span class="icon icon-{{plugin.icon}}"></span>
+              {{plugin.name}}
+            </span>
+          </div>
+          <h5 class="nav-group-title">URL Shorteners</h5>
+          <div ng-repeat="plugin in plugins.urlShorteners">
+            <span ui-sref-active="active" ui-sref="{{plugin.handler}}" class="nav-group-item">
+              <span class="icon icon-{{plugin.icon}}"></span>
+              {{plugin.name}}
+            </span>
+          </div>
+          <h5 class="nav-group-title">Watchers</h5>
+          <div ng-repeat="plugin in plugins.watchers">
+            <span ui-sref-active="active" ui-sref="{{plugin.handler}}" class="nav-group-item">
+              <span class="icon icon-{{plugin.icon}}"></span>
+              {{plugin.name}}
+            </span>
+          </div>
+        </nav>
+      </div>
+
+      <div ui-view style="width: 500px;"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

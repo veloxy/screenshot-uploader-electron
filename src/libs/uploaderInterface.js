@@ -6,7 +6,9 @@ var I = require('methodical');
 var uploaderInterface = new I({
   required: {
     upload: I.function,
-    getName: I.function
+    getName: I.function,
+    getHandler: I.function,
+    getIconName: I.function
   },
   optional: {
     load: I.function

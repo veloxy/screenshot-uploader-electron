@@ -26,7 +26,7 @@ function uploaderHandler () {
     /**
      * @todo Dynamically load the uploader from a config.
      */
-    uploader = require('../plugins/uploaders/aws.js');
+    uploader = require(appRoot + '/assets/js/modules/uploaders/aws/plugin.js');
     uploaderInterface.check(uploader);
     uploader.load(function () {
       console.log(uploader.getName() + ' loaded.');
@@ -47,7 +47,7 @@ function uploaderHandler () {
    * Get the uploaders
    * @returns uploaderInterface uploader
    */
-  object.getUploader = function() {
+  object.getUploader = function () {
     return uploader;
   }
 

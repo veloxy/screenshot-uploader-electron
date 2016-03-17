@@ -8,28 +8,38 @@ const AWS = require('aws-sdk'),
  * @returns {awsUploader}
  */
 function awsUploader() {
+  /**
+   * Base plugin
+   */
+  var basePlugin = new (require(appRoot + '/assets/js/basePlugin.js'))();
 
   /**
    * awsUploader object
    * @type {awsUploader}
      */
-  var object = {};
+  var object = basePlugin;
+
+  var config = {};
 
   /**
    * Load the uploader
    * @param callback
      */
   object.load = function (callback) {
+    config = object.getConfig();
     object.loadAWSConfig();
     callback();
   }
 
   /**
    * Load AWS Config
-   * @todo Load this from preferences of some kind
    */
   object.loadAWSConfig = function () {
-    AWS.config.loadFromPath(appRoot + '/config/config.json');
+    AWS.config.update({
+      accessKeyId: config.accessKeyId,
+      secretAccessKey: config.secretAccessKey,
+      region: config.region
+    });
   }
 
   /**
@@ -40,7 +50,7 @@ function awsUploader() {
   object.upload = function (file, callback) {
     var s3 = new AWS.S3({
       params: {
-        Bucket: object.getBucket(),
+        Bucket: config.bucket,
         Key: path.parse(file).base
       }
     });
@@ -57,17 +67,38 @@ function awsUploader() {
   /**
    * Get the plugin name
    * @returns {string}
-     */
+   */
   object.getName = function () {
-    return 'AWS Uploader';
+    return 'Amazon S3';
   }
 
   /**
-   * Get AWS bucket
+   * Get the plugin handler
    * @returns {string}
+   */
+  object.getHandler = function () {
+    return 'aws';
+  }
+
+  /**
+   * Get uploader icon
+   * @returns {string}
+   */
+  object.getIconName = function () {
+    return 'upload';
+  }
+
+  /**
+   * Get config fields
+   * @returns {string[]}
      */
-  object.getBucket = function () {
-    return 'sourcebox-screenshots';
+  object.getConfigFields = function () {
+    return [
+      'accessKeyId',
+      'secretAccessKey',
+      'bucket',
+      'region'
+    ];
   }
 
   return object;

@@ -26,7 +26,7 @@ function urlShortenerHandler () {
     /**
      * @todo Dynamically load the urlShortener from a config.
      */
-    urlShortener = require('../plugins/url-shorteners/goo.gl.js');
+    urlShortener = require(appRoot + '/assets/js/modules/url-shorteners/goo.gl/plugin.js');
     urlShortenerInterface.check(urlShortener);
     urlShortener.load(function () {
       console.log(urlShortener.getName() + ' loaded.');
