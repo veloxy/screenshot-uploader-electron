@@ -1,6 +1,6 @@
 var plugin = require('./plugin.js');
 
-angular.module('app.googl.routes', [router])
+angular.module('app.file.routes', [router])
   .config(function($stateProvider) {
     $stateProvider
       .state(plugin.getHandler(), {

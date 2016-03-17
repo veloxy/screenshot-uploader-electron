@@ -3,7 +3,7 @@ var plugin = require('./plugin.js');
 angular.module('app.aws.routes', [router])
   .config(function($stateProvider) {
     $stateProvider
-      .state('aws', {
+      .state(plugin.getHandler(), {
         url: '/' + plugin.getHandler(),
         templateUrl: __dirname + '/settings.html',
         controller: function ($scope) {

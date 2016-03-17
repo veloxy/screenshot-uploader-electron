@@ -69,7 +69,7 @@ function awsUploader() {
    * @returns {string}
    */
   object.getName = function () {
-    return 'AWS Uploader';
+    return 'Amazon S3';
   }
 
   /**

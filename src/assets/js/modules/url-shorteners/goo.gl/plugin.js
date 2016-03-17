@@ -49,7 +49,7 @@ function gooGl() {
    * @returns {string}
    */
   object.getName = function () {
-    return 'Goo.gl URL Shortener';
+    return 'Goo.gl';
   }
 
   /**

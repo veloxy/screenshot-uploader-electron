@@ -34,11 +34,7 @@ app.factory("pluginService", function() {
       return this.getPlugins('url-shorteners');
     },
     getWatchers: function() {
-      return [{
-        name: 'File',
-        icon: 'folder',
-        handler: 'file',
-      }]
+      return this.getPlugins('watchers');
     },
   };
 });
