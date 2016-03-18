@@ -2,11 +2,16 @@
 const electron = require('electron'),
   app = electron.app,
   tray = electron.Tray,
+  menu = electron.Menu,
   browserWindow = electron.BrowserWindow,
-  ncp = require("copy-paste")
+  ncp = require("copy-paste"),
   path = require('path');
 
-//app.dock.hide();
+/**
+ * Remove the dock icon
+ */
+app.dock.hide();
+
 global.appRoot = path.resolve(__dirname);
 
 var watcherHandler = require('./libs/watcherHandler.js'),
@@ -44,8 +49,11 @@ watcherHandler.on('newFile', function (file) {
 
 var menuTray = null;
 
+/**
+ * App is ready
+ */
 app.on('ready', function(){
-  window = new browserWindow({ width: 800, height: 500, show: true });
+  window = new browserWindow({ width: 800, height: 500, show: false });
 
   window.loadURL('file://' + __dirname + '/index.html');
   window.webContents.on('did-finish-load', function () {
@@ -55,7 +63,38 @@ app.on('ready', function(){
         watcherHandler.emit('newFile', file);
       });
     });
+
+    /**
+     * Tray menu
+     */
+    menuTray.setContextMenu(menu.buildFromTemplate([
+      {
+        label: 'Settings',
+        click: function() {
+          window.show();
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Quit Application',
+        click: function () {
+          window.forceClose = true;
+          app.quit();
+        },
+      }
+    ]));
   });
 
-  window.toggleDevTools();
+  /**
+   * When closing the settings windows
+   */
+  window.on('close', function (e) {
+    if (window.forceClose) return;
+    e.preventDefault();
+    window.hide();
+  });
+
+  //window.toggleDevTools();
 });
