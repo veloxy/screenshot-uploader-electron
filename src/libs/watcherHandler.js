@@ -47,7 +47,7 @@ function watcherHandler () {
    * @param watcherInterface watcher
      */
   object.init = function (watcher) {
-    console.log(watcher.getName() + ' loaded.');
+    log(watcher.getName() + ' loaded.');
     watcher.watch(function(file) {
       object.emit('newFile', file);
     });

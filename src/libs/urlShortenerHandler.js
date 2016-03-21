@@ -29,7 +29,7 @@ function urlShortenerHandler () {
     urlShortener = require(appRoot + '/assets/js/modules/url-shorteners/goo.gl/plugin.js');
     urlShortenerInterface.check(urlShortener);
     urlShortener.load(function () {
-      console.log(urlShortener.getName() + ' loaded.');
+      log(urlShortener.getName() + ' loaded.');
     });
   };
 

@@ -53,7 +53,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('home', {
       url: '/home',
-      templateUrl: 'pages/home.html'
+      templateUrl: 'pages/home.html',
+      controller: 'loggerController'
+    })
+    .state('logs', {
+      url: '/logs',
+      templateUrl: 'pages/logger.html'
     })
 });
 

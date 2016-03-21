@@ -29,7 +29,7 @@ function uploaderHandler () {
     uploader = require(appRoot + '/assets/js/modules/uploaders/aws/plugin.js');
     uploaderInterface.check(uploader);
     uploader.load(function () {
-      console.log(uploader.getName() + ' loaded.');
+      log(uploader.getName() + ' loaded.');
     });
   };
 

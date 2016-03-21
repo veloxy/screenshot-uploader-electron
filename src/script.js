@@ -11,9 +11,15 @@ const electron = require('electron'),
 /**
  * Remove the dock icon
  */
-// app.dock.hide();
+app.dock.hide();
 
 global.appRoot = path.resolve(__dirname);
+global.log = function (message) {
+  window.webContents.send('newLog', {
+    time: new Date().toLocaleString(),
+    message: message
+  });
+}
 
 var watcherHandler = null,
   uploaderHandler = null,
@@ -30,7 +36,7 @@ var menuTray = null;
  * App is ready
  */
 app.on('ready', function(){
-  window = new browserWindow({ width: 800, height: 500, show: false });
+  global.window = new browserWindow({ width: 800, height: 500, show: false });
 
   window.loadURL('file://' + __dirname + '/index.html');
   window.webContents.on('did-finish-load', function () {
@@ -74,11 +80,11 @@ app.on('ready', function(){
     window.hide();
   });
 
-  //window.toggleDevTools();
+  // window.toggleDevTools();
 });
 
 function loadApp() {
-  console.log('LoadApp');
+  log('Loading App');
   watcherHandler = require('./libs/watcherHandler.js'),
   uploaderHandler = require('./libs/uploaderHandler.js'),
   urlShortenerHandler = require('./libs/urlShortenerHandler.js');
@@ -93,10 +99,10 @@ function loadApp() {
    * @todo Multiple configurable callbacks
    */
   uploaderHandler.on('fileUploaded', function (location) {
-    console.log('Original file location ' + location);
+    log('Original file location ' + location);
     urlShortenerHandler.shorten(location, function (url) {
       ncp.copy(url, function() {
-        console.log("URL pasted to clipboard " + url);
+        log('URL pasted to clipboard ' + url);
         window.webContents.send('notification', {
           title: 'Uploaded',
           body: 'URL pasted to clipboard ' + url,
@@ -109,7 +115,7 @@ function loadApp() {
    * Run on new file
    */
   watcherHandler.on('newFile', function (file) {
-    console.log('New file ' + file);
+    log('New file ' + file);
     uploaderHandler.upload(file);
   });
 }
