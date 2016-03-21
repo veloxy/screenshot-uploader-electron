@@ -37,6 +37,7 @@ function basePlugin() {
     for (var key in fields) {
       settings.set(object.getHandler() + '.' + fields[key], data[fields[key]]);
     }
+    ipc.send('load-app', true);
   }
 
   object.getConfigPath = function () {

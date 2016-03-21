@@ -5,47 +5,24 @@ const electron = require('electron'),
   menu = electron.Menu,
   browserWindow = electron.BrowserWindow,
   ncp = require("copy-paste"),
+  ipc = require('electron').ipcMain;
   path = require('path');
 
 /**
  * Remove the dock icon
  */
-app.dock.hide();
+// app.dock.hide();
 
 global.appRoot = path.resolve(__dirname);
 
-var watcherHandler = require('./libs/watcherHandler.js'),
-  uploaderHandler = require('./libs/uploaderHandler.js'),
-  urlShortenerHandler = require('./libs/urlShortenerHandler.js');
-  pluginHandler = require('./libs/pluginHandler.js');
+var watcherHandler = null,
+  uploaderHandler = null,
+  urlShortenerHandler = null;
 
-//pluginHandler.getPlugins('uploaders');
-
-// Load handlers
-uploaderHandler.loadUploader();
-urlShortenerHandler.loadUrlShortener();
-watcherHandler.loadWatchers();
-
-/**
- * Run on file upload
- * @todo Multiple configurable callbacks
- */
-uploaderHandler.on('fileUploaded', function (location) {
-  console.log('Original file location ' + location);
-  urlShortenerHandler.shorten(location, function (url) {
-    ncp.copy(url, function() {
-      console.log("URL pasted to clipboard " + url);
-    });
-  });
+ipc.on('load-app', function(event, arg) {
+  console.log('Loading App');
+  loadApp();
 });
-
-/**
- * Run on new file
- */
-watcherHandler.on('newFile', function (file) {
-  console.log('New file ' + file);
-  uploaderHandler.upload(file);
-})
 
 var menuTray = null;
 
@@ -57,6 +34,7 @@ app.on('ready', function(){
 
   window.loadURL('file://' + __dirname + '/index.html');
   window.webContents.on('did-finish-load', function () {
+    loadApp();
     menuTray = new tray(__dirname + '/assets/icons/trayTemplate.png');
     menuTray.on('drop-files', function(event, files) {
       files.map(function(file) {
@@ -98,3 +76,40 @@ app.on('ready', function(){
 
   //window.toggleDevTools();
 });
+
+function loadApp() {
+  console.log('LoadApp');
+  watcherHandler = require('./libs/watcherHandler.js'),
+  uploaderHandler = require('./libs/uploaderHandler.js'),
+  urlShortenerHandler = require('./libs/urlShortenerHandler.js');
+
+  // Load handlers
+  uploaderHandler.loadUploader();
+  urlShortenerHandler.loadUrlShortener();
+  watcherHandler.loadWatchers();
+
+  /**
+   * Run on file upload
+   * @todo Multiple configurable callbacks
+   */
+  uploaderHandler.on('fileUploaded', function (location) {
+    console.log('Original file location ' + location);
+    urlShortenerHandler.shorten(location, function (url) {
+      ncp.copy(url, function() {
+        console.log("URL pasted to clipboard " + url);
+        window.webContents.send('notification', {
+          title: 'Uploaded',
+          body: 'URL pasted to clipboard ' + url,
+          sound: path.join(__dirname, 'assets/sound/bell.mp3') });
+      });
+    });
+  });
+
+  /**
+   * Run on new file
+   */
+  watcherHandler.on('newFile', function (file) {
+    console.log('New file ' + file);
+    uploaderHandler.upload(file);
+  });
+}

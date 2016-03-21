@@ -1,4 +1,5 @@
 var path = require('path');
+const ipc = require('electron').ipcRenderer;
 
 global.angular = require('angular');
 global.router = require('angular-ui-router');
@@ -54,4 +55,23 @@ app.config(function($stateProvider, $urlRouterProvider) {
       url: '/home',
       templateUrl: 'pages/home.html'
     })
+});
+
+ipc.on('notification', function(event, options) {
+  /**
+   * Fix for notification sound because it doesn't seem to work
+   * in electron.
+   */
+  if (options.sound) {
+    options.silent = true;
+    var audio = new Audio(options.sound);
+    audio.play();
+    options.sound = null;
+  }
+  new Notification(options.title, options);
+});
+
+ipc.on('play-sound', function(event, soundFile) {
+  var audio = new Audio(soundFile);
+  audio.play();
 });
