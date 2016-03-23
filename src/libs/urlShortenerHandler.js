@@ -22,12 +22,16 @@ function urlShortenerHandler () {
   /**
    * Setup and Load urlShortener
    */
-  object.loadUrlShortener = function () {
+  object.loadUrlShortener = function (reload) {
+    if (reload) {
+      object.destroy();
+    }
     /**
      * @todo Dynamically load the urlShortener from a config.
      */
     urlShortener = require(appRoot + '/assets/js/modules/url-shorteners/goo.gl/plugin.js');
     urlShortenerInterface.check(urlShortener);
+    urlShortenerInterface.complete(urlShortener);
     urlShortener.load(function () {
       log(urlShortener.getName() + ' loaded.');
     });
@@ -37,6 +41,18 @@ function urlShortenerHandler () {
     urlShortener.shorten(url, function(shortenedUrl) {
       callback(shortenedUrl);
     });
+  }
+
+  /**
+   * Destroy the urlshortener
+   */
+  object.destroy = function () {
+    object.removeAllListeners();
+    if (typeof urlShortener.destroy === 'function') {
+      urlShortener.destroy();
+      log('Destroying url-shortener ' + urlShortener.getName());
+    }
+    delete urlShortener;
   }
 
   return object;

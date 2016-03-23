@@ -35,6 +35,10 @@ function fileWatcher() {
     callback();
   };
 
+  object.destroy = function () {
+    watcher.close();
+  }
+
   /**
    * Watch file changes run callback on new file
    * @param callback

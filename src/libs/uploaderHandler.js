@@ -22,12 +22,17 @@ function uploaderHandler () {
   /**
    * Setup and Load uploader
    */
-  object.loadUploader = function () {
+  object.loadUploader = function (reload) {
+    if (reload) {
+      object.destroy();
+    }
     /**
      * @todo Dynamically load the uploader from a config.
      */
     uploader = require(appRoot + '/assets/js/modules/uploaders/aws/plugin.js');
+
     uploaderInterface.check(uploader);
+
     uploader.load(function () {
       log(uploader.getName() + ' loaded.');
     });
@@ -49,6 +54,18 @@ function uploaderHandler () {
    */
   object.getUploader = function () {
     return uploader;
+  }
+
+  /**
+   * Destroy the uploader
+   */
+  object.destroy = function () {
+    object.removeAllListeners();
+    if (typeof uploader.destroy === 'function') {
+      log('Destroying uploader ' + uploader.getName());
+      uploader.destroy();
+    }
+    delete uploader;
   }
 
   return object;

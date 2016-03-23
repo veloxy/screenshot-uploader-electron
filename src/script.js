@@ -26,8 +26,8 @@ var watcherHandler = null,
   urlShortenerHandler = null;
 
 ipc.on('load-app', function(event, arg) {
-  console.log('Loading App');
-  loadApp();
+  console.log('Loading App 111');
+  loadApp(true);
 });
 
 var menuTray = null;
@@ -83,16 +83,26 @@ app.on('ready', function(){
   // window.toggleDevTools();
 });
 
-function loadApp() {
+function loadApp(reload) {
   log('Loading App');
+  if (reload) {
+    console.log('Reloading app');
+  } else {
+    console.log('Loading app');
+  }
+
+  delete watcherHandler;
+  delete uploaderHandler;
+  delete urlShortenerHandler;
+
   watcherHandler = require('./libs/watcherHandler.js'),
   uploaderHandler = require('./libs/uploaderHandler.js'),
   urlShortenerHandler = require('./libs/urlShortenerHandler.js');
 
   // Load handlers
-  uploaderHandler.loadUploader();
-  urlShortenerHandler.loadUrlShortener();
-  watcherHandler.loadWatchers();
+  uploaderHandler.loadUploader(reload);
+  urlShortenerHandler.loadUrlShortener(reload);
+  watcherHandler.loadWatchers(reload);
 
   /**
    * Run on file upload
