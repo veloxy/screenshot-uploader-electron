@@ -17,9 +17,6 @@ angular.module('app.file.routes', [router])
 
           $scope.submit = function() {
             plugin.saveConfig(this);
-            plugin.load(function() {
-              console.log('Reloading config');
-            })
           }
         }
       });

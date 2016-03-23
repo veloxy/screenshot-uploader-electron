@@ -29,13 +29,17 @@ function fileWatcher() {
     watcher = chokidar.watch(object.getDirectory(), {
       ignored: /[\/\\]\./,
       persistent: true,
-      alwaysStat: true
+      alwaysStat: true,
+      awaitWriteFinish: true
     });
+
+    log('Watching directory ' + object.getDirectory());
 
     callback();
   };
 
   object.destroy = function () {
+    delete watcher;
     watcher.close();
   }
 
@@ -44,12 +48,16 @@ function fileWatcher() {
    * @param callback
    */
   object.watch = function (callback) {
+    log('Watching files');
     watcher.on('add', function (file, event) {
       var fileCreatedDate = new Date(event.ctime);
       var currentDate = new Date();
       var pastDate = new Date(currentDate.getTime() - 60000);
 
+      log('File added ' + file);
+
       if (fileCreatedDate >= pastDate && fileCreatedDate <= currentDate) {
+        log('Passing new file to callback ' + file);
         callback(file);
       }
     });

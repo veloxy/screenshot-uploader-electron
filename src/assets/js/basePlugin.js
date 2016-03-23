@@ -1,6 +1,7 @@
 const ElectronSettings = require('electron-settings');
   settings = new ElectronSettings({
-    configDirPath: new basePlugin().getConfigPath()
+    configDirPath: new basePlugin().getConfigPath(),
+    debouncedSaveTime: 1
   });
 
 /**
@@ -15,7 +16,22 @@ function basePlugin() {
    */
   var object = {};
 
+  object.watchConfigFieldChanges = function () {
+    log('Watching config changes for ' + object.getHandler() + '.*');
+    settings.watch(object.getHandler() + '.*', function() {
+      log('Reloading app after config changes');
+      ipc.send('load-app', true);
+    })
+  }
+
   object.getConfig = function () {
+    // settings.destroy();
+    // settings = new ElectronSettings({
+    //   configDirPath: new basePlugin().getConfigPath()
+    // });
+
+    // object.watchConfigFieldChanges();
+
     var fields = object.getConfigFields();
     var config = {};
 
@@ -33,11 +49,18 @@ function basePlugin() {
   }
 
   object.saveConfig = function (data) {
+    log('Saving config data');
+
     var fields = object.getConfigFields();
+
     for (var key in fields) {
+      log('Setting ' + object.getHandler() + '.' + fields[key] + ' to ' + data[fields[key]]);
       settings.set(object.getHandler() + '.' + fields[key], data[fields[key]]);
     }
-    ipc.send('load-app', true);
+
+    ipc.emit('loadApp');
+
+    log('Config data saved and app reload triggered');
   }
 
   object.getConfigPath = function () {

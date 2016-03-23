@@ -4,7 +4,6 @@ const electron = require('electron'),
   tray = electron.Tray,
   menu = electron.Menu,
   browserWindow = electron.BrowserWindow,
-  ncp = require("copy-paste"),
   ipc = require('electron').ipcMain;
   path = require('path');
 
@@ -15,20 +14,26 @@ app.dock.hide();
 
 global.appRoot = path.resolve(__dirname);
 global.log = function (message) {
+  console.log('[' + new Date().toLocaleString() + '] ' + message);
   window.webContents.send('newLog', {
     time: new Date().toLocaleString(),
     message: message
   });
 }
 
-var watcherHandler = null,
-  uploaderHandler = null,
-  urlShortenerHandler = null;
-
-ipc.on('load-app', function(event, arg) {
-  console.log('Loading App 111');
-  loadApp(true);
+ipc.on('loadApp', function() {
+  window.webContents.send('loadApp');
+  log('App reloaded because of settings changes.');
+  log('App reload finished.');
 });
+
+ipc.on('newLog', function (event, message) {
+  log(message);
+})
+
+ipc.on('notification', function (event, data) {
+  window.webContents.send('notification', data);
+})
 
 var menuTray = null;
 
@@ -40,11 +45,12 @@ app.on('ready', function(){
 
   window.loadURL('file://' + __dirname + '/index.html');
   window.webContents.on('did-finish-load', function () {
-    loadApp();
     menuTray = new tray(__dirname + '/assets/icons/trayTemplate.png');
     menuTray.on('drop-files', function(event, files) {
+      log('Files dropped on tray');
       files.map(function(file) {
-        watcherHandler.emit('newFile', file);
+        log('Sending new dropped file ' + file);
+        window.webContents.send('newFile', file);
       });
     });
 
@@ -80,52 +86,5 @@ app.on('ready', function(){
     window.hide();
   });
 
-  // window.toggleDevTools();
+  window.toggleDevTools();
 });
-
-function loadApp(reload) {
-  log('Loading App');
-  if (reload) {
-    console.log('Reloading app');
-  } else {
-    console.log('Loading app');
-  }
-
-  delete watcherHandler;
-  delete uploaderHandler;
-  delete urlShortenerHandler;
-
-  watcherHandler = require('./libs/watcherHandler.js'),
-  uploaderHandler = require('./libs/uploaderHandler.js'),
-  urlShortenerHandler = require('./libs/urlShortenerHandler.js');
-
-  // Load handlers
-  uploaderHandler.loadUploader(reload);
-  urlShortenerHandler.loadUrlShortener(reload);
-  watcherHandler.loadWatchers(reload);
-
-  /**
-   * Run on file upload
-   * @todo Multiple configurable callbacks
-   */
-  uploaderHandler.on('fileUploaded', function (location) {
-    log('Original file location ' + location);
-    urlShortenerHandler.shorten(location, function (url) {
-      ncp.copy(url, function() {
-        log('URL pasted to clipboard ' + url);
-        window.webContents.send('notification', {
-          title: 'Uploaded',
-          body: 'URL pasted to clipboard ' + url,
-          sound: path.join(__dirname, 'assets/sound/bell.mp3') });
-      });
-    });
-  });
-
-  /**
-   * Run on new file
-   */
-  watcherHandler.on('newFile', function (file) {
-    log('New file ' + file);
-    uploaderHandler.upload(file);
-  });
-}

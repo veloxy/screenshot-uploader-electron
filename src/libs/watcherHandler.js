@@ -29,9 +29,14 @@ function watcherHandler () {
       object.destroy();
     }
 
+    watchers = [fileWatcher];
+
     for (var key in watchers) {
-      var watcher = watchers[key];
-      object.load(watcher);
+      if (watchers.hasOwnProperty(key)) {
+        var watcher = watchers[key];
+        log('Loading ' + watcher.getName() + 'Watcher.');
+        object.load(watcher);
+      }
     }
   };
 
@@ -42,7 +47,8 @@ function watcherHandler () {
   object.load = function (watcher) {
     watcherInterface.check(watcher);
     watcherInterface.complete(watcher);
-    watcher.load(function() {
+    watcher.load(function () {
+      log(watcher.getName() + 'Watcher loaded.');
       object.init(watcher);
     });
   };
@@ -52,8 +58,8 @@ function watcherHandler () {
    * @param watcherInterface watcher
      */
   object.init = function (watcher) {
-    log(watcher.getName() + ' loaded.');
-    watcher.watch(function(file) {
+    log(watcher.getName() + 'Watcher initialized.');
+    watcher.watch(function (file) {
       object.emit('newFile', file);
     });
   }
@@ -69,9 +75,8 @@ function watcherHandler () {
         watcher.destroy();
         log('Destroying watcher ' + watcher.getName());
       }
-      delete watcher;
     }
-    watchers = [];
+    delete watchers;
   }
 
   return object;

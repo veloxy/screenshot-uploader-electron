@@ -25,6 +25,7 @@ function uploaderHandler () {
   object.loadUploader = function (reload) {
     if (reload) {
       object.destroy();
+      delete uploader;
     }
     /**
      * @todo Dynamically load the uploader from a config.

@@ -1,9 +1,13 @@
 var path = require('path');
-const ipc = require('electron').ipcRenderer;
+var ipc = require('electron').ipcRenderer;
 
 global.angular = require('angular');
 global.router = require('angular-ui-router');
 global.appRoot = path.resolve(__dirname);
+
+global.log = function (message) {
+  ipc.send('newLog', message);
+}
 
 require(__dirname + '/assets/js/modules/uploaders/aws/module.js');
 require(__dirname + '/assets/js/modules/url-shorteners/goo.gl/module.js');
@@ -62,6 +66,9 @@ app.config(function($stateProvider, $urlRouterProvider) {
     })
 });
 
+/**
+ * Send notifications
+ */
 ipc.on('notification', function(event, options) {
   /**
    * Fix for notification sound because it doesn't seem to work
@@ -76,6 +83,9 @@ ipc.on('notification', function(event, options) {
   new Notification(options.title, options);
 });
 
+/**
+ * Play sound
+ */
 ipc.on('play-sound', function(event, soundFile) {
   var audio = new Audio(soundFile);
   audio.play();
