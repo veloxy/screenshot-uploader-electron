@@ -60,7 +60,11 @@ function awsUploader() {
       ACL: "public-read",
       ContentType: mime.lookup(file)
     }, function (err, data) {
-      callback(data.Location);
+      if (err) {
+        log(err.message);
+      } else {
+        callback(data.Location);
+      }
     });
   }
 

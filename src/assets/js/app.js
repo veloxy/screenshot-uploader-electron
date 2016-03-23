@@ -1,8 +1,13 @@
 var path = require('path');
+var ipc = require('electron').ipcRenderer;
 
 global.angular = require('angular');
 global.router = require('angular-ui-router');
 global.appRoot = path.resolve(__dirname);
+
+global.log = function (message) {
+  ipc.send('newLog', message);
+}
 
 require(__dirname + '/assets/js/modules/uploaders/aws/module.js');
 require(__dirname + '/assets/js/modules/url-shorteners/goo.gl/module.js');
@@ -52,6 +57,36 @@ app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('home', {
       url: '/home',
-      templateUrl: 'pages/home.html'
+      templateUrl: 'pages/home.html',
+      controller: 'loggerController'
     })
+    .state('logs', {
+      url: '/logs',
+      templateUrl: 'pages/logger.html'
+    })
+});
+
+/**
+ * Send notifications
+ */
+ipc.on('notification', function(event, options) {
+  /**
+   * Fix for notification sound because it doesn't seem to work
+   * in electron.
+   */
+  if (options.sound) {
+    options.silent = true;
+    var audio = new Audio(options.sound);
+    audio.play();
+    options.sound = null;
+  }
+  new Notification(options.title, options);
+});
+
+/**
+ * Play sound
+ */
+ipc.on('play-sound', function(event, soundFile) {
+  var audio = new Audio(soundFile);
+  audio.play();
 });

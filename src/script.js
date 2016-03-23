@@ -4,7 +4,7 @@ const electron = require('electron'),
   tray = electron.Tray,
   menu = electron.Menu,
   browserWindow = electron.BrowserWindow,
-  ncp = require("copy-paste"),
+  ipc = require('electron').ipcMain;
   path = require('path');
 
 /**
@@ -13,38 +13,26 @@ const electron = require('electron'),
 app.dock.hide();
 
 global.appRoot = path.resolve(__dirname);
-
-var watcherHandler = require('./libs/watcherHandler.js'),
-  uploaderHandler = require('./libs/uploaderHandler.js'),
-  urlShortenerHandler = require('./libs/urlShortenerHandler.js');
-  pluginHandler = require('./libs/pluginHandler.js');
-
-//pluginHandler.getPlugins('uploaders');
-
-// Load handlers
-uploaderHandler.loadUploader();
-urlShortenerHandler.loadUrlShortener();
-watcherHandler.loadWatchers();
-
-/**
- * Run on file upload
- * @todo Multiple configurable callbacks
- */
-uploaderHandler.on('fileUploaded', function (location) {
-  console.log('Original file location ' + location);
-  urlShortenerHandler.shorten(location, function (url) {
-    ncp.copy(url, function() {
-      console.log("URL pasted to clipboard " + url);
-    });
+global.log = function (message) {
+  console.log('[' + new Date().toLocaleString() + '] ' + message);
+  window.webContents.send('newLog', {
+    time: new Date().toLocaleString(),
+    message: message
   });
+}
+
+ipc.on('loadApp', function() {
+  window.webContents.send('loadApp');
+  log('App reloaded because of settings changes.');
+  log('App reload finished.');
 });
 
-/**
- * Run on new file
- */
-watcherHandler.on('newFile', function (file) {
-  console.log('New file ' + file);
-  uploaderHandler.upload(file);
+ipc.on('newLog', function (event, message) {
+  log(message);
+})
+
+ipc.on('notification', function (event, data) {
+  window.webContents.send('notification', data);
 })
 
 var menuTray = null;
@@ -53,14 +41,16 @@ var menuTray = null;
  * App is ready
  */
 app.on('ready', function(){
-  window = new browserWindow({ width: 800, height: 500, show: false });
+  global.window = new browserWindow({ width: 800, height: 500, show: false });
 
   window.loadURL('file://' + __dirname + '/index.html');
   window.webContents.on('did-finish-load', function () {
     menuTray = new tray(__dirname + '/assets/icons/trayTemplate.png');
     menuTray.on('drop-files', function(event, files) {
+      log('Files dropped on tray');
       files.map(function(file) {
-        watcherHandler.emit('newFile', file);
+        log('Sending new dropped file ' + file);
+        window.webContents.send('newFile', file);
       });
     });
 
@@ -96,5 +86,5 @@ app.on('ready', function(){
     window.hide();
   });
 
-  //window.toggleDevTools();
+  window.toggleDevTools();
 });

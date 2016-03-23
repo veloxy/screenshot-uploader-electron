@@ -11,7 +11,8 @@ var uploaderInterface = new I({
     getIconName: I.function
   },
   optional: {
-    load: I.function
+    load: I.function,
+    destroy: I.function
   }
 });
 

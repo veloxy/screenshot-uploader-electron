@@ -24,10 +24,19 @@ function watcherHandler () {
   /**
    * Load watchers
    */
-  object.loadWatchers = function() {
+  object.loadWatchers = function(reload) {
+    if (reload) {
+      object.destroy();
+    }
+
+    watchers = [fileWatcher];
+
     for (var key in watchers) {
-      var watcher = watchers[key];
-      object.load(watcher);
+      if (watchers.hasOwnProperty(key)) {
+        var watcher = watchers[key];
+        log('Loading ' + watcher.getName() + 'Watcher.');
+        object.load(watcher);
+      }
     }
   };
 
@@ -37,7 +46,9 @@ function watcherHandler () {
      */
   object.load = function (watcher) {
     watcherInterface.check(watcher);
-    watcher.load(function() {
+    watcherInterface.complete(watcher);
+    watcher.load(function () {
+      log(watcher.getName() + 'Watcher loaded.');
       object.init(watcher);
     });
   };
@@ -47,10 +58,25 @@ function watcherHandler () {
    * @param watcherInterface watcher
      */
   object.init = function (watcher) {
-    console.log(watcher.getName() + ' loaded.');
-    watcher.watch(function(file) {
+    log(watcher.getName() + 'Watcher initialized.');
+    watcher.watch(function (file) {
       object.emit('newFile', file);
     });
+  }
+
+  /**
+   * Destroy a watcher
+   */
+  object.destroy = function () {
+    object.removeAllListeners();
+    for (var key in watchers) {
+      var watcher = watchers[key];
+      if (typeof watcher.destroy === 'function') {
+        watcher.destroy();
+        log('Destroying watcher ' + watcher.getName());
+      }
+    }
+    delete watchers;
   }
 
   return object;

@@ -9,7 +9,9 @@ var watcherInterface = new I({
     getName: I.function,
     load: I.function
   },
-  optional: {}
+  optional: {
+    destroy: I.function
+  }
 });
 
 /**

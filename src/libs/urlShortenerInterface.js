@@ -8,6 +8,9 @@ var UrlShortenerInterface = new I({
     shorten: I.function,
     getName: I.function,
     load: I.function
+  },
+  optional: {
+    destroy: I.function
   }
 });
 
